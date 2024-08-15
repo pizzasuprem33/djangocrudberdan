@@ -1,0 +1,43 @@
+{% extends "layout/base.html" %}
+
+{% block 'title' %}
+ ADD USER
+{% endblock 'title' %}
+
+{% block 'content' %}
+<form action="/user/store" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="first_name" class="form-label">First Name</label>
+      <input type="text" class="form-control" id="first_name" name="first_name"/>
+
+      <label for="middle_name" class="form-label">Middle Name</label>
+      <input type="text" class="form-control" id="middle_name" name="middle_name"/>
+
+      <label for="last_name" class="form-label">Last Name</label>
+      <input type="text" class="form-control" id="user" name="last_name"/>
+
+      <label for="age" class="form-label">Age</label>
+      <input type="text" class="form-control" id="age" name="age"/>
+
+        <label for="gender">Gender</label>
+        <select name="gender" id="gender" class="form-select">
+         {% for gender in genders %}
+         <option value="{{ gender.gender_id }}">{{ gender.gender}}</option>
+         {% endfor %}
+        </select>
+
+      <label for="birth_date" class="form-label">Birthday</label>
+      <input type="date" class="form-control" id="birth_date" name="birth_date"/>
+
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" name="username"/>
+
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password"/>
+
+    </div>
+    <a href="/users" class="btn btn-secondary">Go to list</a>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock 'content' %}

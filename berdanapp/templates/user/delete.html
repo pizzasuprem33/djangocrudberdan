@@ -1,0 +1,12 @@
+{% extends "layout/base.html" %}
+
+{% block title %} DELETE USER {% endblock title %}
+
+{% block 'content' %}
+<p>ARE YOU SURE YOU WANT TO DELETE THIS USER? NAMED: {{ user.first_name }} {% if user.middle_name %}{{ user.middle_name }}{% endif %} {{ user.last_name }}</p>
+<form action="/user/destroy/{{user.user_id}}" method="post">
+    {% csrf_token %}
+    <a href="/users" class="btn btn-secondary">GO TO LIST OF USERS</a>
+    <button type="submit" class="btn btn-danger">YES</button>
+</form>
+{% endblock 'content' %}

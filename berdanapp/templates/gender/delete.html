@@ -1,0 +1,12 @@
+{% extends "layout/base.html" %}
+
+{% block title %} DELETE GENDER {% endblock title %} DELETE GENDER 
+
+{% block 'content' %}
+<p>ARE YOU SURE YOU WANT TO DELETE THIS GENDER? NAMED: {{gender.gender}}</p>
+<form action="/gender/destroy/{{gender.gender_id}}" method="post">
+    {% csrf_token %}
+    <a href="/genders" class="btn btn-secondary">GO TO LIST OF GENDERS</a>
+    <button type="submit" class="btn btn-danger">YES</button>
+</form>
+{% endblock 'content' %}

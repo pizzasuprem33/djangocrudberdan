@@ -1,0 +1,38 @@
+{% extends "layout/base.html" %}
+
+{% block 'title' %}
+List of Genders
+{% endblock 'title' %}
+
+{% block 'content' %}
+{% include "include/message.html" %}
+<a href="/gender/add" class="btn btn-secondary">Gender</a>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">Genders</th>
+        <th scope="col">Date</th>
+        <th scope="col">Date Updated</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gender in genders %}
+      <tr>
+        <td>{{gender.gender_id}}</td>
+        <td>{{gender.gender}}</td>
+        <td>{{gender.date_created}}</td>
+        <td>{{gender.date_updated}}</td>
+
+        <td>
+            <div class="btn-group">
+                <a href="/gender/edit/{{gender.gender_id}}" class="btn btn-success">Update</a>
+                <a href="/gender/delete/{{gender.gender_id}}" class="btn btn-danger">Delete</a>
+            </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock 'content' %}
