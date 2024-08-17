@@ -5,7 +5,20 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 
+# NOTE: Custom decorator
+def unauthenticated_user(view_func):
+    def wrapper_func(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect('/users')  # Redirect authenticated users to home
+        else:
+            return view_func(request, *args, **kwargs)
+
+    return wrapper_func
+
+@login_required
 def gender_index(request):
     genders = Gender.objects.all()
 
@@ -15,9 +28,11 @@ def gender_index(request):
 
     return render(request,'gender/index.html', data)
 
+@login_required
 def gender_create(request):
     return render(request,'gender/create.html')
 
+@login_required
 def gender_store(request):
     gender = request.POST.get('gender')
     Gender.objects.create(gender=gender).save()
@@ -25,6 +40,7 @@ def gender_store(request):
 
     return redirect('/genders')
 
+@login_required
 def gender_edit(request, gender_id):
     gender = Gender.objects.get(pk=gender_id)
 
@@ -34,6 +50,7 @@ def gender_edit(request, gender_id):
 
     return render(request, 'gender/edit.html', data)
 
+@login_required
 def gender_update(request, gender_id):
     genderObj = Gender.objects.get(pk=gender_id)
     gender = request.POST.get('gender')
@@ -43,6 +60,7 @@ def gender_update(request, gender_id):
 
     return redirect('/genders')
 
+@login_required
 def gender_delete(request, gender_id):
     gender = Gender.objects.get(pk=gender_id)
 
@@ -52,12 +70,14 @@ def gender_delete(request, gender_id):
 
     return render(request, 'gender/delete.html', data)
 
+@login_required
 def gender_destroy(request, gender_id):
     genderObj = Gender.objects.get(pk=gender_id)
     genderObj.delete()
 
     return redirect('/genders')
 
+@login_required
 def user_index(request):
     query = request.GET.get('q')
     if query:
@@ -81,6 +101,7 @@ def user_index(request):
 
     return render(request, 'user/index.html', data)
 
+@login_required
 def user_create(request):
     genders = Gender.objects.all()
 
@@ -89,8 +110,7 @@ def user_create(request):
     }
     return render(request,'user/create.html', data)
 
-
-
+@login_required
 def user_store(request):
     firstName = request.POST.get('first_name')
     middleName = request.POST.get('middle_name')
@@ -113,6 +133,7 @@ def user_store(request):
  
     return redirect('/users')
 
+@login_required
 def user_edit(request, user_id):
     user = User.objects.get(pk=user_id)
     genders = Gender.objects.all()
@@ -125,6 +146,7 @@ def user_edit(request, user_id):
 
     return render(request, 'user/edit.html', data)
 
+@login_required
 def user_update(request, user_id):
     userObj = User.objects.get(pk=user_id)
     firstName = request.POST.get('first_name')
@@ -149,6 +171,7 @@ def user_update(request, user_id):
  
     return redirect('/users')
 
+@login_required
 def user_delete(request, user_id):
     user = User.objects.get(pk=user_id)
 
@@ -158,12 +181,14 @@ def user_delete(request, user_id):
 
     return render(request, 'user/delete.html', data)
 
+@login_required
 def user_destroy(request, user_id):
     userObj = User.objects.get(pk=user_id)
     userObj.delete()
 
     return redirect('/users')
 
+@unauthenticated_user
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -173,13 +198,14 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            return redirect('/')
+            return redirect('/users')
         else:
             messages.error(request, 'Invalid username or password')
     
     return render(request, 'user/login.html')
 
 
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('login')
